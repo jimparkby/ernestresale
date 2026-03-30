@@ -35,6 +35,8 @@ export const TelegramProvider = ({ children }: { children: React.ReactNode }) =>
       if (tg) {
         tg.ready();
         tg.expand();
+        // Request fullscreen (Telegram 7.8+)
+        if (tg.requestFullscreen) tg.requestFullscreen();
         initData = tg.initData;
         tgUser = tg.initDataUnsafe?.user ?? null;
       }
