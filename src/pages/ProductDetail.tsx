@@ -3,6 +3,7 @@ import { ArrowLeft, Star, MapPin, Heart, X } from "lucide-react";
 import { useState } from "react";
 import { useProducts } from "@/hooks/useProducts";
 import { useLikes } from "@/hooks/useLikes";
+import PageHeader from "@/components/PageHeader";
 
 const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -26,7 +27,7 @@ const ProductDetail = () => {
 
   return (
     <div className="min-h-screen pb-8">
-      <div className="sticky top-0 z-40 bg-background/95 backdrop-blur border-b border-border px-4 h-14 flex items-center gap-3">
+      <PageHeader>
         <button onClick={() => navigate(-1)} className="text-muted-foreground">
           <ArrowLeft size={22} />
         </button>
@@ -38,7 +39,7 @@ const ProductDetail = () => {
             className={isLiked(product.id) ? "fill-primary text-primary" : "text-muted-foreground"} />
           <span className="text-xs text-muted-foreground font-body">{product.likes_count}</span>
         </button>
-      </div>
+      </PageHeader>
 
       <div className="aspect-square bg-card overflow-hidden">
         <img src={product.image_url} alt={product.name} className="w-full h-full object-cover" />

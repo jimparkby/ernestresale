@@ -4,6 +4,7 @@ import { MapPin, CreditCard, Plus, Edit2, Check, Heart } from "lucide-react";
 import { useTelegram } from "@/context/TelegramContext";
 import { useUserProfile } from "@/hooks/useUserProfile";
 import { useProducts } from "@/hooks/useProducts";
+import PageHeader from "@/components/PageHeader";
 
 const Profile = () => {
   const { user } = useTelegram();
@@ -20,9 +21,9 @@ const Profile = () => {
 
   return (
     <div className="min-h-screen pb-20">
-      <div className="sticky top-0 z-40 bg-background/95 backdrop-blur border-b border-border px-4 h-14 flex items-center">
+      <PageHeader>
         <span className="font-heading text-base font-semibold text-foreground">Профиль</span>
-      </div>
+      </PageHeader>
 
       <div className="px-4 pt-6 space-y-5">
         {/* Avatar + name */}

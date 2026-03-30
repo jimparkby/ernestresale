@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { MapPin, ShoppingBag } from "lucide-react";
 import { useProducts } from "@/hooks/useProducts";
+import PageHeader from "@/components/PageHeader";
 
 const medalColors = ["#C9A84C", "#A8A9AD", "#CD7F32"];
 
@@ -34,9 +35,9 @@ const Ratings = () => {
 
   return (
     <div className="min-h-screen pb-20">
-      <div className="sticky top-0 z-40 bg-background/95 backdrop-blur border-b border-border px-4 h-14 flex items-center">
+      <PageHeader>
         <span className="font-heading text-base font-semibold text-foreground">Рейтинг продавцов</span>
-      </div>
+      </PageHeader>
 
       <div className="px-4 pt-4 space-y-3">
         {sorted.length === 0 && (

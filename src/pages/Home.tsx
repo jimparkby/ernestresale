@@ -2,6 +2,7 @@ import { useProducts } from "@/hooks/useProducts";
 import { useLikes } from "@/hooks/useLikes";
 import { Link } from "react-router-dom";
 import { Heart } from "lucide-react";
+import PageHeader from "@/components/PageHeader";
 
 const Home = () => {
   const { products, loading } = useProducts();
@@ -9,11 +10,11 @@ const Home = () => {
 
   return (
     <div className="min-h-screen pb-20">
-      <div className="sticky top-0 z-40 bg-background/95 backdrop-blur border-b border-border px-4 h-14 flex items-center">
+      <PageHeader>
         <span className="font-heading text-lg font-bold text-foreground">
           ernest<span className="text-primary">resale</span>
         </span>
-      </div>
+      </PageHeader>
 
       <div className="px-4 pt-4">
         <h2 className="text-xs uppercase tracking-widest text-muted-foreground font-body mb-4">

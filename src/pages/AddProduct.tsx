@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Camera, Check } from "lucide-react";
 import { useTelegram } from "@/context/TelegramContext";
 import { useProducts } from "@/hooks/useProducts";
+import PageHeader from "@/components/PageHeader";
 
 const conditions = ["Как новая", "Отличное", "Хорошее", "Удовлетворительное"];
 
@@ -56,7 +57,7 @@ const AddProduct = () => {
 
   return (
     <div className="min-h-screen pb-8">
-      <div className="sticky top-0 z-40 bg-background/95 backdrop-blur border-b border-border px-4 h-14 flex items-center gap-3">
+      <PageHeader>
         <button onClick={() => navigate(-1)} className="text-muted-foreground">
           <ArrowLeft size={22} />
         </button>
@@ -68,7 +69,7 @@ const AddProduct = () => {
           {saved ? <Check size={14} /> : null}
           {saving ? "Загрузка..." : saved ? "Сохранено" : "Опубликовать"}
         </button>
-      </div>
+      </PageHeader>
 
       <div className="px-4 pt-5 space-y-5">
         <input ref={fileRef} type="file" accept="image/*" onChange={handleImage} className="hidden" />

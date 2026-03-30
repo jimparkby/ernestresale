@@ -1,6 +1,7 @@
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { ArrowLeft, MapPin, ShoppingBag } from "lucide-react";
 import { useProducts } from "@/hooks/useProducts";
+import PageHeader from "@/components/PageHeader";
 
 const SellerProfile = () => {
   const { id } = useParams<{ id: string }>();
@@ -23,12 +24,12 @@ const SellerProfile = () => {
 
   return (
     <div className="min-h-screen pb-8">
-      <div className="sticky top-0 z-40 bg-background/95 backdrop-blur border-b border-border px-4 h-14 flex items-center gap-3">
+      <PageHeader>
         <button onClick={() => navigate(-1)} className="text-muted-foreground">
           <ArrowLeft size={22} />
         </button>
         <span className="font-heading text-base font-semibold text-foreground">{sellerName}</span>
-      </div>
+      </PageHeader>
 
       <div className="px-4 pt-6 space-y-5">
         <div className="bg-card border border-border rounded-sm p-5 flex items-center gap-4">
