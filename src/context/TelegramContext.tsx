@@ -30,16 +30,18 @@ export const TelegramProvider = ({ children }: { children: React.ReactNode }) =>
     const init = async () => {
       const tg = (window as any).Telegram?.WebApp;
       let initData = "";
+      let tgUser: any = null;
 
       if (tg) {
         tg.ready();
         tg.expand();
         initData = tg.initData;
+        tgUser = tg.initDataUnsafe?.user ?? null;
       }
 
-      // Dev fallback — simulate initData
-      if (!initData) {
-        const devUser = {
+      // Dev fallback — not in Telegram
+      if (!initData && !tgUser) {
+        setUser({
           id: 100000001,
           first_name: "Александр",
           last_name: "К.",
@@ -47,12 +49,25 @@ export const TelegramProvider = ({ children }: { children: React.ReactNode }) =>
           photo_url: undefined,
           city: "",
           payment_info: "",
-        };
-        setUser(devUser as TelegramUser);
+        });
         setIsReady(true);
         return;
       }
 
+      // Always show Telegram user immediately (even if backend fails)
+      if (tgUser) {
+        setUser({
+          id: tgUser.id,
+          first_name: tgUser.first_name,
+          last_name: tgUser.last_name,
+          username: tgUser.username,
+          photo_url: tgUser.photo_url,
+          city: "",
+          payment_info: "",
+        });
+      }
+
+      // Then try to enrich with DB data (city, payment_info)
       try {
         const res = await fetch("/api/auth", {
           method: "POST",
@@ -64,7 +79,7 @@ export const TelegramProvider = ({ children }: { children: React.ReactNode }) =>
           setUser(dbUser);
         }
       } catch (e) {
-        console.error("Auth error", e);
+        // Backend not ready yet, Telegram data already shown above
       } finally {
         setIsReady(true);
       }
