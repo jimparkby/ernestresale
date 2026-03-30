@@ -1,31 +1,23 @@
-import { useState } from "react";
-
-const STORAGE_KEY = "ernestresale_profile";
-
-interface Profile {
-  city: string;
-  paymentInfo: string;
-}
-
-function load(): Profile {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? JSON.parse(raw) : { city: "", paymentInfo: "" };
-  } catch {
-    return { city: "", paymentInfo: "" };
-  }
-}
+import { useTelegram } from "@/context/TelegramContext";
 
 export const useUserProfile = () => {
-  const [profile, setProfile] = useState<Profile>(load);
+  const { user, updateUser } = useTelegram();
 
-  const saveProfile = (updates: Partial<Profile>) => {
-    setProfile((prev) => {
-      const next = { ...prev, ...updates };
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
-      return next;
+  const saveProfile = async (updates: { city?: string; payment_info?: string }) => {
+    if (!user) return;
+
+    // Optimistic update
+    updateUser(updates);
+
+    await fetch("/api/profile", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ user_id: user.id, ...updates }),
     });
   };
 
-  return { profile, saveProfile };
+  return {
+    profile: { city: user?.city ?? "", paymentInfo: user?.payment_info ?? "" },
+    saveProfile,
+  };
 };
