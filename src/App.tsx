@@ -11,6 +11,9 @@ import Profile from "@/pages/Profile";
 import AddProduct from "@/pages/AddProduct";
 import ProductDetail from "@/pages/ProductDetail";
 import SellerProfile from "@/pages/SellerProfile";
+import About from "@/pages/About";
+import Archive from "@/pages/Archive";
+import Contacts from "@/pages/Contacts";
 import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -44,6 +47,9 @@ const App = () => (
               <Route path="/profile/add-product" element={<AddProduct />} />
               <Route path="/product/:id" element={<ProductDetail />} />
               <Route path="/seller/:id" element={<SellerProfile />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/archive" element={<Archive />} />
+              <Route path="/contacts" element={<Contacts />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Layout>

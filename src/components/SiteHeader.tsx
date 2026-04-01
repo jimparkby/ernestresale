@@ -1,8 +1,12 @@
 import { Search, Menu, X } from "lucide-react";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 const navLinks = [
-  "Каталог", "Дизайнеры", "Коллекции", "Новинки", "Мужское", "Скидки", "Магазины", "Контакты"
+  { label: "Магазин", href: "#shop" },
+  { label: "О нас", href: "/about" },
+  { label: "Архив", href: "/archive" },
+  { label: "Контакты", href: "/contacts" },
 ];
 
 const SiteHeader = () => {
@@ -10,75 +14,65 @@ const SiteHeader = () => {
   const [searchOpen, setSearchOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
-      <div className="container flex items-center justify-between h-16 md:h-20">
+    <header className="sticky top-0 z-50 bg-background border-b border-border">
+      <div className="mx-auto flex h-14 max-w-[1400px] items-center justify-between px-6 lg:px-10">
         {/* Logo */}
-        <a href="/" className="font-heading text-xl md:text-2xl font-bold tracking-tight text-foreground">
-          Luxe<span className="text-primary">Resale</span>
-        </a>
+        <Link to="/" className="text-sm font-semibold tracking-widest text-foreground uppercase">
+          ernestresale
+        </Link>
 
         {/* Desktop Nav */}
-        <nav className="hidden lg:flex items-center gap-6">
+        <nav className="hidden md:flex items-center gap-6 text-sm">
           {navLinks.map((link) => (
-            <a
-              key={link}
-              href="#"
-              className="text-xs font-medium uppercase tracking-widest text-muted-foreground hover:text-primary transition-colors"
+            <Link
+              key={link.label}
+              to={link.href}
+              className="text-xs text-muted-foreground hover:text-foreground transition-colors"
             >
-              {link}
-            </a>
+              {link.label}
+            </Link>
           ))}
-          <a href="#" className="text-xs font-bold uppercase tracking-widest text-primary">
-            Продать
-          </a>
         </nav>
 
         {/* Right icons */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-4">
           {searchOpen ? (
-            <div className="hidden md:flex items-center border border-border rounded-sm overflow-hidden">
+            <div className="hidden md:flex items-center border border-border overflow-hidden">
               <input
                 autoFocus
                 type="text"
                 placeholder="Поиск..."
-                className="bg-transparent px-3 py-1.5 text-sm outline-none w-48 font-body"
+                className="bg-transparent px-3 py-1.5 text-xs outline-none w-44"
               />
               <button onClick={() => setSearchOpen(false)} className="px-2 text-muted-foreground hover:text-foreground">
-                <X size={16} />
+                <X size={14} />
               </button>
             </div>
           ) : (
             <button onClick={() => setSearchOpen(true)} className="text-muted-foreground hover:text-foreground transition-colors">
-              <Search size={20} />
+              <Search size={16} />
             </button>
           )}
-          <button className="lg:hidden text-foreground" onClick={() => setMobileOpen(!mobileOpen)}>
-            {mobileOpen ? <X size={24} /> : <Menu size={24} />}
+          <button className="md:hidden text-foreground" onClick={() => setMobileOpen(!mobileOpen)}>
+            {mobileOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
         </div>
       </div>
 
-      {/* Divider */}
-      <div className="border-b border-border" />
-
       {/* Mobile menu */}
       {mobileOpen && (
-        <div className="lg:hidden bg-background border-b border-border animate-fade-in">
-          <nav className="container py-4 flex flex-col gap-3">
-            {navLinks.map((link) => (
-              <a
-                key={link}
-                href="#"
-                className="text-sm uppercase tracking-widest text-muted-foreground hover:text-primary transition-colors"
-              >
-                {link}
-              </a>
-            ))}
-            <a href="#" className="text-sm font-bold uppercase tracking-widest text-primary">
-              Продать
-            </a>
-          </nav>
-        </div>
+        <nav className="md:hidden border-t border-border bg-background px-6 py-4 space-y-3">
+          {navLinks.map((link) => (
+            <Link
+              key={link.label}
+              to={link.href}
+              className="block text-sm text-foreground tracking-wide"
+              onClick={() => setMobileOpen(false)}
+            >
+              {link.label}
+            </Link>
+          ))}
+        </nav>
       )}
     </header>
   );

@@ -82,8 +82,8 @@ export default {
         },
       },
       fontFamily: {
-        heading: ['Playfair Display', 'Georgia', 'serif'],
-        body: ['Lato', '-apple-system', 'sans-serif'],
+        heading: ['Inter', '-apple-system', 'sans-serif'],
+        body: ['Inter', '-apple-system', 'sans-serif'],
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",

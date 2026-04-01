@@ -1,48 +1,29 @@
+import { ArrowLeft, Heart } from "lucide-react";
+import { Link } from "react-router-dom";
+import PageHeader from "@/components/PageHeader";
 import { useProducts } from "@/hooks/useProducts";
 import { useLikes } from "@/hooks/useLikes";
-import { Link } from "react-router-dom";
-import { Heart } from "lucide-react";
-import HomeHeader from "@/components/HomeHeader";
-import CategoryGrid from "@/components/CategoryGrid";
-import heroImg from "@/assets/hero-studio.jpg";
 
-const Home = () => {
+const Archive = () => {
   const { products, loading } = useProducts();
   const { toggleLike, isLiked } = useLikes();
 
+  // Archive shows sold-out / featured archive pieces (top liked items)
+  const archiveItems = [...products].sort((a, b) => b.likes_count - a.likes_count);
+
   return (
     <div className="min-h-screen pb-20">
-      <HomeHeader />
+      <PageHeader>
+        <Link to="/" className="text-muted-foreground hover:text-foreground transition-colors">
+          <ArrowLeft size={20} />
+        </Link>
+        <span className="text-sm font-medium tracking-widest uppercase text-foreground">Архив</span>
+      </PageHeader>
 
-      {/* Hero Banner */}
-      <section className="relative w-full h-[55vh] overflow-hidden">
-        <img
-          src={heroImg}
-          alt="Exclusive archive fashion pieces"
-          className="absolute inset-0 w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-foreground/20" />
-        <div className="relative z-10 flex flex-col items-center justify-center h-full text-center px-4">
-          <h1 className="text-2xl md:text-4xl font-light tracking-wide text-primary-foreground mb-5">
-            эксклюзивные архивные вещи
-          </h1>
-          <a
-            href="#shop"
-            className="border border-primary-foreground text-primary-foreground px-7 py-2.5 text-xs tracking-widest uppercase hover:bg-primary-foreground hover:text-foreground transition-colors"
-          >
-            Смотреть всё
-          </a>
-        </div>
-      </section>
-
-      {/* Category Grid */}
-      <CategoryGrid />
-
-      {/* Products Section */}
-      <section id="shop" className="px-4 pb-4">
-        <h2 className="text-base font-normal tracking-tight text-foreground mb-5">
-          Все товары
-        </h2>
+      <div className="px-4 py-6">
+        <p className="text-xs text-muted-foreground tracking-wide mb-6 leading-relaxed">
+          Архивные и коллекционные предметы — самые желанные вещи на платформе, отобранные по количеству лайков.
+        </p>
 
         {loading && (
           <div className="grid grid-cols-2 gap-3">
@@ -56,14 +37,14 @@ const Home = () => {
           </div>
         )}
 
-        {!loading && products.length === 0 && (
+        {!loading && archiveItems.length === 0 && (
           <p className="text-center text-muted-foreground text-sm mt-12">
-            Товаров пока нет
+            Архив пуст
           </p>
         )}
 
         <div className="grid grid-cols-2 gap-3">
-          {products.map((product) => (
+          {archiveItems.map((product) => (
             <div key={product.id} className="relative group">
               <Link to={`/product/${product.id}`} className="block">
                 <div className="relative bg-muted overflow-hidden aspect-square">
@@ -73,9 +54,11 @@ const Home = () => {
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     loading="lazy"
                   />
-                  <span className="absolute bottom-2 left-2 bg-foreground text-primary-foreground text-[10px] px-2 py-0.5 uppercase tracking-wider">
-                    {product.condition}
-                  </span>
+                  {product.likes_count > 0 && (
+                    <span className="absolute bottom-2 left-2 bg-foreground text-primary-foreground text-[10px] px-2 py-0.5 uppercase tracking-wider">
+                      {product.likes_count} ♥
+                    </span>
+                  )}
                 </div>
                 <div className="mt-2 space-y-0.5 pr-7">
                   <p className="text-[11px] text-muted-foreground uppercase tracking-wider">{product.brand}</p>
@@ -97,9 +80,9 @@ const Home = () => {
             </div>
           ))}
         </div>
-      </section>
+      </div>
     </div>
   );
 };
 
-export default Home;
+export default Archive;
