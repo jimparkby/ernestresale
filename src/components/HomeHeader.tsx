@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Menu, X } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -11,11 +11,34 @@ const navLinks = [
 
 const HomeHeader = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [visible, setVisible] = useState(true);
+  const lastScrollY = useRef(0);
+
+  useEffect(() => {
+    const onScroll = () => {
+      const current = window.scrollY;
+      if (current <= 10) {
+        setVisible(true);
+      } else if (current > lastScrollY.current + 4) {
+        setVisible(false);
+        setMobileOpen(false);
+      } else if (current < lastScrollY.current - 4) {
+        setVisible(true);
+      }
+      lastScrollY.current = current;
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
     <header
-      className="sticky top-0 z-50 bg-background border-b border-border"
-      style={{ paddingTop: "var(--tg-content-safe-area-inset-top, 0px)" }}
+      className="fixed left-0 right-0 top-0 z-50 bg-background border-b border-border transition-transform duration-300"
+      style={{
+        paddingTop: "var(--tg-content-safe-area-inset-top, 0px)",
+        transform: visible ? "translateY(0)" : "translateY(-100%)",
+      }}
     >
       <div className="flex h-13 items-center justify-between px-4 py-3">
         {/* Logo */}

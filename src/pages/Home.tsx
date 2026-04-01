@@ -1,17 +1,56 @@
+import { useState, useRef } from "react";
 import { useProducts } from "@/hooks/useProducts";
 import { useLikes } from "@/hooks/useLikes";
 import { Link } from "react-router-dom";
 import { Heart } from "lucide-react";
 import HomeHeader from "@/components/HomeHeader";
-import CategoryGrid from "@/components/CategoryGrid";
+import CategoryGrid, { CategoryKey } from "@/components/CategoryGrid";
 import heroImg from "@/assets/hero-studio.jpg";
+
+// Keyword map for category filtering by product name/brand
+const categoryKeywords: Record<string, string[]> = {
+  "Обувь": ["shoe", "boot", "sneaker", "обувь", "туфли", "кроссовк", "сапог", "mule", "loafer", "heel", "сандал"],
+  "Аксессуары": ["sunglasses", "glasses", "bag", "wallet", "belt", "scarf", "hat", "cap", "очки", "сумка", "кошелёк", "ремень", "шарф", "шапка", "accessory"],
+  "Верхняя одежда": ["jacket", "coat", "куртка", "пальто", "пуховик", "бомбер", "парка", "outerwear", "blazer"],
+  "Новинки": [], // shows most recent (last 4 items)
+};
+
+function matchCategory(product: { name: string; brand: string }, cat: CategoryKey): boolean {
+  if (!cat) return true;
+  const keywords = categoryKeywords[cat] ?? [];
+  if (cat === "Новинки") return true; // handled separately
+  const text = `${product.name} ${product.brand}`.toLowerCase();
+  return keywords.some((kw) => text.includes(kw));
+}
 
 const Home = () => {
   const { products, loading } = useProducts();
   const { toggleLike, isLiked } = useLikes();
+  const [activeCategory, setActiveCategory] = useState<CategoryKey>(null);
+  const shopRef = useRef<HTMLElement>(null);
+
+  const handleCategorySelect = (cat: CategoryKey) => {
+    setActiveCategory(cat);
+    // Scroll to products section
+    setTimeout(() => {
+      shopRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 50);
+  };
+
+  const filteredProducts = activeCategory === "Новинки"
+    ? [...products].slice(0, 6)
+    : activeCategory
+      ? products.filter((p) => matchCategory(p, activeCategory))
+      : products;
+
+  const sectionTitle = activeCategory ?? "Все товары";
 
   return (
     <div className="min-h-screen pb-20">
+      {/* Spacer to push content below fixed header (~80px) */}
+      <div style={{ height: "calc(3.5rem + 2rem + var(--tg-content-safe-area-inset-top, 0px))" }} />
+
+      {/* HomeHeader is fixed, rendered via component below */}
       <HomeHeader />
 
       {/* Hero Banner */}
@@ -26,22 +65,22 @@ const Home = () => {
           <h1 className="text-2xl md:text-4xl font-light tracking-wide text-primary-foreground mb-5">
             эксклюзивные архивные вещи
           </h1>
-          <a
-            href="#shop"
+          <button
+            onClick={() => handleCategorySelect(null)}
             className="border border-primary-foreground text-primary-foreground px-7 py-2.5 text-xs tracking-widest uppercase hover:bg-primary-foreground hover:text-foreground transition-colors"
           >
             Смотреть всё
-          </a>
+          </button>
         </div>
       </section>
 
       {/* Category Grid */}
-      <CategoryGrid />
+      <CategoryGrid active={activeCategory} onSelect={handleCategorySelect} />
 
       {/* Products Section */}
-      <section id="shop" className="px-4 pb-4">
+      <section id="shop" ref={shopRef} className="px-4 pb-4 scroll-mt-24">
         <h2 className="text-base font-normal tracking-tight text-foreground mb-5">
-          Все товары
+          {sectionTitle}
         </h2>
 
         {loading && (
@@ -56,14 +95,14 @@ const Home = () => {
           </div>
         )}
 
-        {!loading && products.length === 0 && (
+        {!loading && filteredProducts.length === 0 && (
           <p className="text-center text-muted-foreground text-sm mt-12">
-            Товаров пока нет
+            {activeCategory ? `Товаров в категории «${activeCategory}» пока нет` : "Товаров пока нет"}
           </p>
         )}
 
         <div className="grid grid-cols-2 gap-3">
-          {products.map((product) => (
+          {filteredProducts.map((product) => (
             <div key={product.id} className="relative group">
               <Link to={`/product/${product.id}`} className="block">
                 <div className="relative bg-muted overflow-hidden aspect-square">
