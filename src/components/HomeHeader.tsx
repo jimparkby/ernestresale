@@ -40,14 +40,18 @@ const HomeHeader = () => {
         transform: visible ? "translateY(0)" : "translateY(-100%)",
       }}
     >
-      <div className="flex h-13 items-center justify-between px-4 py-3">
-        {/* Logo */}
-        <Link to="/" className="text-sm font-semibold tracking-widest text-foreground uppercase">
+      {/* Top row: logo centered, hamburger on right */}
+      <div className="relative flex h-12 items-center justify-center px-4 py-2">
+        {/* Logo — centered absolutely so TG close button (left) doesn't overlap */}
+        <Link
+          to="/"
+          className="absolute left-1/2 -translate-x-1/2 text-sm font-semibold tracking-widest text-foreground uppercase whitespace-nowrap"
+        >
           ernestresale
         </Link>
 
-        {/* Desktop nav */}
-        <nav className="hidden md:flex items-center gap-6">
+        {/* Desktop nav — right side on md+ */}
+        <nav className="hidden md:flex items-center gap-6 ml-auto">
           {navLinks.map((link) => (
             <Link
               key={link.label}
@@ -59,9 +63,9 @@ const HomeHeader = () => {
           ))}
         </nav>
 
-        {/* Mobile hamburger */}
+        {/* Mobile hamburger — right */}
         <button
-          className="md:hidden text-foreground"
+          className="md:hidden absolute right-4 text-foreground"
           onClick={() => setMobileOpen(!mobileOpen)}
         >
           {mobileOpen ? <X size={20} /> : <Menu size={20} />}

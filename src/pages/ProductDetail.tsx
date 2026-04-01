@@ -1,5 +1,5 @@
 import { useParams, useNavigate, Link } from "react-router-dom";
-import { ArrowLeft, Star, MapPin, Heart, X } from "lucide-react";
+import { ArrowLeft, MapPin, Heart, X, MessageCircle } from "lucide-react";
 import { useState } from "react";
 import { useProducts } from "@/hooks/useProducts";
 import { useLikes } from "@/hooks/useLikes";
@@ -22,8 +22,14 @@ const ProductDetail = () => {
     );
   }
 
-  const seller = product.users;
-  const sellerName = seller ? `${seller.first_name}${(seller as any).last_name ? " " + (seller as any).last_name : ""}` : "Продавец";
+  const seller = product.users as any;
+  const sellerName = seller
+    ? `${seller.first_name}${seller.last_name ? " " + seller.last_name : ""}`
+    : "Продавец";
+  const sellerUsername = seller?.username as string | undefined;
+  const tgChatUrl = sellerUsername
+    ? `https://t.me/${sellerUsername}`
+    : null;
 
   return (
     <div className="min-h-screen pb-8">
@@ -31,13 +37,16 @@ const ProductDetail = () => {
         <button onClick={() => navigate(-1)} className="text-muted-foreground">
           <ArrowLeft size={22} />
         </button>
-        <span className="font-heading text-base font-semibold text-foreground flex-1 truncate">
+        <span className="text-base font-semibold text-foreground flex-1 truncate">
           {product.brand} · {product.name}
         </span>
         <button onClick={() => toggleLike(product.id)} className="flex items-center gap-1.5">
-          <Heart size={20} strokeWidth={1.8}
-            className={isLiked(product.id) ? "fill-primary text-primary" : "text-muted-foreground"} />
-          <span className="text-xs text-muted-foreground font-body">{product.likes_count}</span>
+          <Heart
+            size={20}
+            strokeWidth={1.8}
+            className={isLiked(product.id) ? "fill-primary text-primary" : "text-muted-foreground"}
+          />
+          <span className="text-xs text-muted-foreground">{product.likes_count}</span>
         </button>
       </PageHeader>
 
@@ -47,49 +56,51 @@ const ProductDetail = () => {
 
       <div className="px-4 pt-5 space-y-5">
         <div>
-          <p className="text-xs uppercase tracking-widest text-muted-foreground font-body">{product.brand}</p>
-          <h1 className="font-heading text-xl font-semibold text-foreground mt-1">{product.name}</h1>
-          <p className="text-2xl font-heading font-bold text-primary mt-2">{product.price}</p>
+          <p className="text-xs uppercase tracking-widest text-muted-foreground">{product.brand}</p>
+          <h1 className="text-xl font-semibold text-foreground mt-1">{product.name}</h1>
+          <p className="text-2xl font-bold text-primary mt-2">{product.price}</p>
         </div>
 
         <div className="grid grid-cols-2 gap-3">
-          <div className="bg-card border border-border rounded-sm p-3">
-            <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-body mb-1">Состояние</p>
-            <p className="text-sm font-body text-foreground">{product.condition}</p>
+          <div className="bg-card border border-border p-3">
+            <p className="text-[10px] uppercase tracking-widest text-muted-foreground mb-1">Состояние</p>
+            <p className="text-sm text-foreground">{product.condition}</p>
           </div>
-          <div className="bg-card border border-border rounded-sm p-3">
-            <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-body mb-1">Материал</p>
-            <p className="text-sm font-body text-foreground">{product.material || "—"}</p>
+          <div className="bg-card border border-border p-3">
+            <p className="text-[10px] uppercase tracking-widest text-muted-foreground mb-1">Материал</p>
+            <p className="text-sm text-foreground">{product.material || "—"}</p>
           </div>
         </div>
 
         {product.description && (
           <div>
-            <p className="text-xs uppercase tracking-widest text-muted-foreground font-body mb-2">Описание</p>
-            <p className="text-sm font-body text-foreground leading-relaxed">{product.description}</p>
+            <p className="text-xs uppercase tracking-widest text-muted-foreground mb-2">Описание</p>
+            <p className="text-sm text-foreground leading-relaxed">{product.description}</p>
           </div>
         )}
 
-        <div className="bg-card border border-border rounded-sm p-4">
-          <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-body mb-3">Продавец</p>
+        <div className="bg-card border border-border p-4">
+          <p className="text-[10px] uppercase tracking-widest text-muted-foreground mb-3">Продавец</p>
           <Link to={`/seller/${product.seller_id}`} className="flex items-center gap-3 active:opacity-70">
-            <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center shrink-0">
-              <span className="text-sm font-heading font-bold text-primary">{sellerName.charAt(0)}</span>
+            <div className="w-10 h-10 bg-muted flex items-center justify-center shrink-0">
+              <span className="text-sm font-bold text-primary">{sellerName.charAt(0)}</span>
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-body font-medium text-foreground">{sellerName}</p>
+              <p className="text-sm font-medium text-foreground">{sellerName}</p>
               {seller?.city && (
-                <span className="flex items-center gap-1 text-xs text-muted-foreground font-body mt-0.5">
+                <span className="flex items-center gap-1 text-xs text-muted-foreground mt-0.5">
                   <MapPin size={11} /> {seller.city}
                 </span>
               )}
             </div>
-            <span className="text-xs text-primary font-body">Профиль →</span>
+            <span className="text-xs text-muted-foreground">Профиль →</span>
           </Link>
         </div>
 
-        <button onClick={() => setPaymentOpen(true)}
-          className="w-full bg-primary text-primary-foreground py-4 font-body text-sm uppercase tracking-widest rounded-sm">
+        <button
+          onClick={() => setPaymentOpen(true)}
+          className="w-full bg-primary text-primary-foreground py-4 text-sm uppercase tracking-widest"
+        >
           Купить
         </button>
       </div>
@@ -98,21 +109,53 @@ const ProductDetail = () => {
         <div className="fixed inset-0 z-50 bg-black/50 flex items-end">
           <div className="w-full bg-background rounded-t-2xl px-6 pt-6 pb-10 space-y-4 animate-slide-up">
             <div className="flex items-center justify-between">
-              <h2 className="font-heading text-lg font-semibold text-foreground">Оплата</h2>
-              <button onClick={() => setPaymentOpen(false)}><X size={22} className="text-muted-foreground" /></button>
+              <h2 className="text-lg font-semibold text-foreground">Оплата</h2>
+              <button onClick={() => setPaymentOpen(false)}>
+                <X size={22} className="text-muted-foreground" />
+              </button>
             </div>
-            <p className="text-sm font-body text-muted-foreground">Переведите {product.price} на реквизиты продавца:</p>
-            <div className="bg-muted rounded-sm p-4">
-              <p className="text-sm font-body text-foreground font-medium">
-                {(seller as any)?.payment_info || "Реквизиты уточните у продавца"}
+
+            <p className="text-sm text-muted-foreground">
+              Переведите <span className="font-medium text-foreground">{product.price}</span> на реквизиты продавца:
+            </p>
+
+            <div className="bg-muted p-4">
+              <p className="text-sm text-foreground font-medium">
+                {seller?.payment_info || "Реквизиты уточните у продавца"}
               </p>
             </div>
-            <p className="text-xs text-muted-foreground font-body leading-relaxed">
+
+            <p className="text-xs text-muted-foreground leading-relaxed">
               После оплаты свяжитесь с продавцом для подтверждения и согласования доставки.
             </p>
-            <Link to={`/seller/${product.seller_id}`}
-              className="block w-full text-center border border-primary text-primary py-3 font-body text-sm uppercase tracking-wider rounded-sm"
-              onClick={() => setPaymentOpen(false)}>
+
+            {/* Telegram chat button */}
+            {tgChatUrl ? (
+              <a
+                href={tgChatUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2 w-full bg-foreground text-primary-foreground py-3.5 text-sm uppercase tracking-widest"
+              >
+                <MessageCircle size={16} />
+                Написать продавцу в Telegram
+              </a>
+            ) : (
+              <Link
+                to={`/seller/${product.seller_id}`}
+                className="flex items-center justify-center gap-2 w-full bg-foreground text-primary-foreground py-3.5 text-sm uppercase tracking-widest"
+                onClick={() => setPaymentOpen(false)}
+              >
+                <MessageCircle size={16} />
+                Профиль продавца
+              </Link>
+            )}
+
+            <Link
+              to={`/seller/${product.seller_id}`}
+              className="block w-full text-center border border-border text-muted-foreground py-3 text-sm uppercase tracking-wider"
+              onClick={() => setPaymentOpen(false)}
+            >
               Профиль продавца
             </Link>
           </div>
