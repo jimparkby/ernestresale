@@ -14,12 +14,14 @@ import SellerProfile from "@/pages/SellerProfile";
 import About from "@/pages/About";
 import Archive from "@/pages/Archive";
 import Contacts from "@/pages/Contacts";
+import Shops from "@/pages/Shops";
+import ShopDetail from "@/pages/ShopDetail";
 import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
 
 // Pages that show the bottom navigation bar
-const TAB_ROUTES = ["/", "/search", "/ratings", "/profile"];
+const TAB_ROUTES = ["/", "/search", "/shops", "/ratings", "/profile"];
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const { pathname } = useLocation();
@@ -47,6 +49,8 @@ const App = () => (
               <Route path="/profile/add-product" element={<AddProduct />} />
               <Route path="/product/:id" element={<ProductDetail />} />
               <Route path="/seller/:id" element={<SellerProfile />} />
+              <Route path="/shops" element={<Shops />} />
+              <Route path="/shops/:id" element={<ShopDetail />} />
               <Route path="/about" element={<About />} />
               <Route path="/archive" element={<Archive />} />
               <Route path="/contacts" element={<Contacts />} />

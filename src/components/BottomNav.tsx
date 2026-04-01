@@ -1,9 +1,10 @@
-import { Home, Search, Trophy, User } from "lucide-react";
+import { Home, Search, Store, Trophy, User } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 
 const tabs = [
   { to: "/", icon: Home, label: "Лента" },
   { to: "/search", icon: Search, label: "Поиск" },
+  { to: "/shops", icon: Store, label: "Магазины" },
   { to: "/ratings", icon: Trophy, label: "Рейтинг" },
   { to: "/profile", icon: User, label: "Профиль" },
 ];
