@@ -36,7 +36,7 @@ const HomeHeader = () => {
     <header
       className="fixed left-0 right-0 top-0 z-50 bg-background border-b border-border transition-transform duration-300"
       style={{
-        paddingTop: "var(--tg-content-safe-area-inset-top, 0px)",
+        paddingTop: "max(var(--tg-safe-area-inset-top, 0px), env(safe-area-inset-top, 0px))",
         transform: visible ? "translateY(0)" : "translateY(-100%)",
       }}
     >

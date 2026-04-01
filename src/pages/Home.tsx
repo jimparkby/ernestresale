@@ -47,8 +47,8 @@ const Home = () => {
 
   return (
     <div className="min-h-screen pb-20">
-      {/* Spacer to push content below fixed header (~80px) */}
-      <div style={{ height: "calc(3.5rem + 2rem + var(--tg-content-safe-area-inset-top, 0px))" }} />
+      {/* Spacer to push content below fixed header */}
+      <div style={{ height: "calc(3.5rem + 2rem + max(var(--tg-safe-area-inset-top, 0px), env(safe-area-inset-top, 0px)))" }} />
 
       {/* HomeHeader is fixed, rendered via component below */}
       <HomeHeader />

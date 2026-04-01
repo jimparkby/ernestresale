@@ -2,8 +2,8 @@ const PageHeader = ({ children, className = "" }: { children: React.ReactNode; c
   <div
     className={`sticky top-0 z-40 bg-background border-b border-border px-4 flex items-center gap-3 ${className}`}
     style={{
-      paddingTop: "var(--tg-content-safe-area-inset-top, 0px)",
-      minHeight: "calc(3.5rem + var(--tg-content-safe-area-inset-top, 0px))",
+      paddingTop: "max(var(--tg-safe-area-inset-top, 0px), env(safe-area-inset-top, 0px))",
+      minHeight: "calc(3.5rem + max(var(--tg-safe-area-inset-top, 0px), env(safe-area-inset-top, 0px)))",
     }}
   >
     {children}
