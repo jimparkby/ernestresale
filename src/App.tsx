@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { TelegramProvider } from "@/context/TelegramContext";
+import { ProductsProvider } from "@/context/ProductsContext";
 import BottomNav from "@/components/BottomNav";
 import Home from "@/pages/Home";
 import Search from "@/pages/Search";
@@ -37,6 +38,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TelegramProvider>
+      <ProductsProvider>
       <TooltipProvider>
         <Toaster />
         <BrowserRouter>
@@ -59,6 +61,7 @@ const App = () => (
           </Layout>
         </BrowserRouter>
       </TooltipProvider>
+      </ProductsProvider>
     </TelegramProvider>
   </QueryClientProvider>
 );
